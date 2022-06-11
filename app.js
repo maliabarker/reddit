@@ -16,13 +16,8 @@ require('./data/reddit-db');
 
 const posts = require('./controllers/posts')(app);
 
-app.get('/', (req, res) => {
-    res.render('home');
-});
-
-// NEW POST
-app.get('/posts/new', (req, res) => {
-    res.render('posts-new');
-})
+// app.get('/', (req, res) => {
+//     res.render('home');
+// });
 
 app.listen(3000);

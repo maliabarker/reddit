@@ -1,0 +1,22 @@
+
+{{!-- {{posts}} --}}
+
+<div class="row">
+  <div class="col-sm-8 offset-sm-2">
+    {{!-- {{#each posts}}
+        <a href="{{this.url}}"><h4>{{this.title}}</h4></a>
+        
+        <p>{{this.summary}}</p>
+    {{/each}} --}}
+
+    <ul class="list-group">
+        {{#each posts}}
+            <li class="list-group-item">
+                <div class="lead">{{this.title}}</div>
+                {{!-- <small>Last Updated:{{this.createdAtFormatted}}</small> --}}
+                <a href="{{this.url}}" target="_blank">{{this.url}}</a>
+            </li>
+        {{/each}}
+    </ul>
+  </div>
+</div>
