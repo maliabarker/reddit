@@ -36,13 +36,22 @@ module.exports = (app) => {
     app.post('/posts/new', (req, res) => {
         // INSTANTIATE INSTANCE OF POST MODEL
         const post = new Post(req.body);
-        
-        // let createdAt = post.createdAt;
-        // createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');
-        // post.createdAtFormatted = createdAt;
-
         // SAVE INSTANCE OF POST MODEL TO DB AND REDIRECT TO THE ROOT
         post.save(() => res.redirect('/'));
+    });
+
+    // SHOW SINGLE POST
+    app.get('/posts/:id', (req, res) => {
+        Post.findById(req.params.id).lean()
+          .then((post) => {
+            let createdAt = post.createdAt;
+            createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');
+            post.createdAtFormatted = createdAt;
+            res.render('posts-show', { post })
+        })
+          .catch((err) => {
+            console.log(err.message);
+        });
     });
 
 
