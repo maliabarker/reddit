@@ -15,6 +15,9 @@
                 <div class="lead"><a href="/posts/{{this._id}}">{{this.title}}</a></div>
                 {{!-- <small>Last Updated:{{this.createdAtFormatted}}</small> --}}
                 <a href="{{this.url}}" target="_blank">{{this.url}}</a>
+                <div class="d-flex">
+                    <a href="/n/{{this.subreddit}}" class="ms-auto">{{this.subreddit}}</a>
+                </div>
             </li>
         {{/each}}
     </ul>

@@ -4,7 +4,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { describe, it } = require('mocha');
-const app = require('../server');
+const app = require('../app');
 const Post = require('../models/post');
 
 const agent = chai.request.agent(app);
