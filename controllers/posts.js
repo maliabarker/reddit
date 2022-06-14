@@ -9,11 +9,10 @@ module.exports = (app) => {
     app.get('/', (req, res) => {
         Post.find({}).lean()
           .then((posts) => {
-
-            res.render('posts-index', { posts });
+              res.render('posts-index', { posts });
           })
           .catch((err) => {
-            console.log(err.message);
+              console.log(err.message);
         });
     });
 
@@ -42,14 +41,16 @@ module.exports = (app) => {
 
     // SHOW SINGLE POST
     app.get('/posts/:id', (req, res) => {
-        Post.findById(req.params.id).lean()
-          .then((post) => {
+        // LOOK UP THE POST
+        Post
+        .findById(req.params.id).lean().populate('comments')
+        .then((post) => {
             let createdAt = post.createdAt;
             createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');
             post.createdAtFormatted = createdAt;
             res.render('posts-show', { post })
         })
-          .catch((err) => {
+        .catch((err) => {
             console.log(err.message);
         });
     });
@@ -62,5 +63,7 @@ module.exports = (app) => {
             console.log(err);
         });
     });
+
+
 
   };  
