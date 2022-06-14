@@ -1,6 +1,8 @@
 // controllers/posts.js
 
 const Post = require('../models/post');
+const User = require('../models/user');
+const Comment = require('../models/comment');
 const moment = require('moment');
 
 module.exports = (app) => {
@@ -19,9 +21,11 @@ module.exports = (app) => {
     // ASYNC AWAIT
     app.get('/', async (req, res) => {
         try {
+            // const { user } = req;
+            // console.log(req.cookies);
             const currentUser = await req.user;
             console.log(currentUser)
-            const posts = await Post.find({}).lean();
+            const posts = await Post.find({}).lean().populate('author');
             return res.render('posts-index', { posts, currentUser });
         } catch (err) {
             console.log(err.message);
@@ -40,16 +44,41 @@ module.exports = (app) => {
       }
     });
 
+    // // CREATE
+    // app.post('/posts/new', (req, res) => {
+    //     if (req.user) {
+    //         const post = new Post(req.body);
+    //         console.log('authorized')
+    //         post.save(() => res.redirect('/'));
+    //     } else {
+    //         console.log('unauthorized')
+    //         return res.status(401); // UNAUTHORIZED
+    //     }
+    // });
+
     // CREATE
     app.post('/posts/new', (req, res) => {
-        if (req.user) {
-            const post = new Post(req.body);
-            console.log('authorized')
-            post.save(() => res.redirect('/'));
-        } else {
-            console.log('unauthorized')
-            return res.status(401); // UNAUTHORIZED
-        }
+      if (req.user) {
+        const userId = req.user._id;
+        const post = new Post(req.body);
+        post.author = userId;
+
+        post
+          .save()
+          .then(() => User.findById(userId))
+          .then((user) => {
+            user.posts.unshift(post);
+            user.save();
+            // REDIRECT TO THE NEW POST
+            return res.redirect(`/posts/${post._id}`);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      } else {
+        res.render('error', { errorMessage:'You need to be logged in to see this page.' })
+        return res.status(401); // UNAUTHORIZED
+      }
     });
 
     // SHOW SINGLE POST
@@ -57,7 +86,7 @@ module.exports = (app) => {
         // LOOK UP THE POST
         const currentUser = req.user;
         Post
-        .findById(req.params.id).lean().populate('comments')
+        .findById(req.params.id).lean().populate('comments').populate('author')
         .then((post) => {
             let createdAt = post.createdAt;
             createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');
@@ -72,7 +101,7 @@ module.exports = (app) => {
     // SUBREDDIT
     app.get('/n/:subreddit', (req, res) => {
         const currentUser = req.user;
-        Post.find({ subreddit: req.params.subreddit }).lean()
+        Post.find({ subreddit: req.params.subreddit }).lean().populate('author')
         .then((posts) => res.render('posts-index', { posts, currentUser }))
         .catch((err) => {
             console.log(err);
