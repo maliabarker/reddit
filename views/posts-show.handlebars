@@ -18,6 +18,9 @@
             {{#each post.comments}}
                 <li class="list-group-item">
                     <p>{{this.content}}</p>
+                    <div class="d-flex">
+                        <p class="ms-auto">{{this.author.username}}</p>
+                    </div>
                 </li>
             {{/each}}
         </ul>

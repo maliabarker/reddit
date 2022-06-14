@@ -86,7 +86,7 @@ module.exports = (app) => {
         // LOOK UP THE POST
         const currentUser = req.user;
         Post
-        .findById(req.params.id).lean().populate('comments').populate('author')
+        .findById(req.params.id).lean().populate({ path:'comments', populate: { path: 'author' } }).populate('author')
         .then((post) => {
             let createdAt = post.createdAt;
             createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');

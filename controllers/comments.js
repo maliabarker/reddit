@@ -4,25 +4,25 @@ const Comment = require('../models/comment');
 
 module.exports = (app) => {
     
-    // CREATE Comment
-    app.post('/posts/:postId/comments', (req, res) => {
-        // INSTANTIATE INSTANCE OF MODEL
-        const comment = new Comment(req.body);
+    // // CREATE Comment
+    // app.post('/posts/:postId/comments', (req, res) => {
+    //     // INSTANTIATE INSTANCE OF MODEL
+    //     const comment = new Comment(req.body);
     
-        // SAVE INSTANCE OF Comment MODEL TO DB
-        comment
-        .save()
-        .then(() => Post.findById(req.params.postId))
-        .then((post) => {
-            post.comments.unshift(comment);
-            console.log(post.comments)
-            return post.save();
-        })
-        .then(() => res.redirect('/'))
-        .catch((err) => {
-            console.log(err);
-        });
-    });
+    //     // SAVE INSTANCE OF Comment MODEL TO DB
+    //     comment
+    //     .save()
+    //     .then(() => Post.findById(req.params.postId))
+    //     .then((post) => {
+    //         post.comments.unshift(comment);
+    //         console.log(post.comments)
+    //         return post.save();
+    //     })
+    //     .then(() => res.redirect('/'))
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
+    // });
 
     // CREATE
     app.post('/posts/:postId/comments', (req, res) => {
@@ -40,7 +40,7 @@ module.exports = (app) => {
                 console.log(post.comments)
                 return post.save();
             })
-            .then(() => res.redirect(`/posts/${post._id}`))
+            .then((post) => res.redirect(`/posts/${post._id}`))
             .catch((err) => {
                 console.log(err);
             });
