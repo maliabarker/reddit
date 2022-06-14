@@ -18,9 +18,13 @@ app.use(cookieParser());
 // Set db
 require('./data/reddit-db');
 
+const checkAuth = require('./middleware/checkAuth');
+app.use(checkAuth);
 const posts = require('./controllers/posts')(app);
 const comments = require('./controllers/comments.js')(app);
 const auth = require('./controllers/auth.js')(app);
+
+
 
 // app.get('/', (req, res) => {
 //     res.render('home');
