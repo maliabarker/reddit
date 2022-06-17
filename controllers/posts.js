@@ -8,85 +8,58 @@ const moment = require('moment');
 module.exports = (app) => {
 
     // INDEX
-    // app.get('/', (req, res) => {
-    //   const currentUser = req.user;
-    //   console.log('currentUser', currentUser)
-    //   Post.find({}).lean()
-    //     .then((posts) => res.render('posts-index', { posts, currentUser }))
-    //     .catch((err) => {
-    //       console.log(err.message);
-    //     });
-    // });
-
     // ASYNC AWAIT
     app.get('/', async (req, res) => {
         try {
             // const { user } = req;
             // console.log(req.cookies);
             const currentUser = await req.user;
-            console.log(currentUser)
+            console.log(currentUser);
             const posts = await Post.find({}).lean().populate('author');
             return res.render('posts-index', { posts, currentUser });
         } catch (err) {
             console.log(err.message);
-        }
+        };
     });
 
     // NEW POST
     app.get('/posts/new', (req, res) => {
-      if (req.user) {
-          const currentUser = req.user;
-          res.render('posts-new', { currentUser });
-      } else {
-          console.log('unauthorized')
-          res.render('error', { errorMessage:'You need to be logged in to see this page.' })
-          return res.status(401); // UNAUTHORIZED
-      }
+        if (req.user) {
+            const currentUser = req.user;
+            res.render('posts-new', { currentUser });
+        } else {
+            console.log('unauthorized');
+            res.render('error', { errorMessage:'You need to be logged in to see this page.' });
+            return res.status(401); // UNAUTHORIZED
+        };
     });
-
-    // // CREATE
-    // app.post('/posts/new', (req, res) => {
-    //     if (req.user) {
-    //         const post = new Post(req.body);
-    //         console.log('authorized')
-    //         post.save(() => res.redirect('/'));
-    //     } else {
-    //         console.log('unauthorized')
-    //         return res.status(401); // UNAUTHORIZED
-    //     }
-    // });
 
     // CREATE
     app.post('/posts/new', (req, res) => {
-      if (req.user) {
-        const userId = req.user._id;
-        const post = new Post(req.body);
-        post.author = userId;
+        if (req.user) {
+            const userId = req.user._id;
+            const post = new Post(req.body);
+            post.author = userId;
 
-        post
-          .save()
-          .then(() => User.findById(userId))
-          .then((user) => {
-            user.posts.unshift(post);
-            user.save();
-            // REDIRECT TO THE NEW POST
-            return res.redirect(`/posts/${post._id}`);
-          })
-          .catch((err) => {
-            console.log(err.message);
-          });
-      } else {
-        res.render('error', { errorMessage:'You need to be logged in to see this page.' })
-        return res.status(401); // UNAUTHORIZED
-      }
+            post.save().then(() => User.findById(userId)).then((user) => {
+                user.posts.unshift(post);
+                user.save();
+                // REDIRECT TO THE NEW POST
+                return res.redirect(`/posts/${post._id}`);
+            }).catch((err) => {
+                console.log(err.message);
+            });
+        } else {
+            res.render('error', { errorMessage:'You need to be logged in to see this page.' })
+            return res.status(401); // UNAUTHORIZED
+        };
     });
 
     // SHOW SINGLE POST
     app.get('/posts/:id', (req, res) => {
         // LOOK UP THE POST
         const currentUser = req.user;
-        Post
-        .findById(req.params.id).lean().populate({ path:'comments', populate: { path: 'author' } }).populate('author')
+        Post.findById(req.params.id).lean().populate({ path:'comments', populate: { path: 'author' } }).populate('author')
         .then((post) => {
             let createdAt = post.createdAt;
             createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');
@@ -108,4 +81,7 @@ module.exports = (app) => {
         });
     });
 
-  };  
+    // DELETE
+    
+
+};  

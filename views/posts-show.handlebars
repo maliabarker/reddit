@@ -5,7 +5,7 @@
     <div class="col-sm-6 offset-sm-3">
         <a href="{{post.url}}" class="lead">{{post.title}}</a>
         <small>{{post.createdAtFormatted}}</small>
-        <p>{{post.author.username}}</p>
+        <p><a href="/users/{{post.author.username}}">{{post.author.username}}</a></p>
         <p>{{post.summary}}</p>
         
         <form action="/posts/{{post._id}}/comments" method="post">
@@ -14,12 +14,13 @@
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
+
         <ul class="list-group list-group-flush">
             {{#each post.comments}}
                 <li class="list-group-item">
                     <p>{{this.content}}</p>
                     <div class="d-flex">
-                        <p class="ms-auto">{{this.author.username}}</p>
+                        <p class="ms-auto"><a href="/users/{{post.author.username}}">{{this.author.username}}</a></p>
                     </div>
                 </li>
             {{/each}}
