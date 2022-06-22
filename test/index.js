@@ -21,48 +21,46 @@ chai.use(chaiHttp);
 // Check that the response is successful
 
 describe('site', function () {
-  // Describe what you are testing
-  it('Should have home page', function (done) {
-    // Describe what should happen
-    // In this case we test that the home page loads
-    agent
-      .get('/')
-      .end(function (err, res) {
-        if (err) {
-          return done(err);
-        }
-        res.should.have.status(200);
-        return done(); // Call done if the test completed successfully.
-      });
-  });
+    // Describe what you are testing
+    it('Should have home page', function (done) {
+        // Describe what should happen
+        // In this case we test that the home page loads
+        agent.get('/').end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+            res.should.have.status(200);
+            return done(); // Call done if the test completed successfully.
+        });
+    });
 });
 
 
 describe('Posts', function () {
     // Post that we'll use for testing purposes
     const newPost = {
-      title: 'post title',
-      url: 'https://www.google.com',
-      summary: 'post summary',
-      subreddit: 'a subreddit'
+        title: 'post title',
+        url: 'https://www.google.com',
+        summary: 'post summary',
+        subreddit: 'a subreddit'
     };
 
     // User that we'll use for testing purposes
     const user = {
-      username: 'poststest',
-      password: 'testposts',
+        username: 'poststest',
+        password: 'testposts',
     };
 
     before(function (done) {
         agent
-          .post('/sign-up')
-          .set('content-type', 'application/x-www-form-urlencoded')
-          .send(user)
-          .then(function (res) {
-              done();
-          }).catch(function (err) {
-              done(err);
-          });
+            .post('/sign-up')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send(user)
+            .then(function (res) {
+                done();
+            }).catch(function (err) {
+                done(err);
+            });
     });
 
     it('Should create with valid attributes at POST /posts/new', function(done) {
