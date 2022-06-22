@@ -6,10 +6,10 @@ module.exports = (app) => {
 
     // SHOW USER
     app.get('/users/:username', (req, res) => {
-        // GET USER
+        // get user
         User.findOne({ username: req.params.username }).lean().then((user) => {
             Post.find({ author: user }).lean().then((posts) => {
-                Comment.find({ author: user}).lean().then((comments) => {
+                Comment.find({ author: user}).populate('comments').lean().then((comments) => {
                     // console.log(user);
                     // console.log(posts);
                     // console.log(comments);

@@ -27,7 +27,7 @@
                 {{!-- <p>Part of {{}}</p> --}}
                 <p>{{this.content}}</p>
                 <div class="d-flex">
-                    <p class="ms-auto">Part of <\insert post> </p>
+                    <p class="ms-auto">Posted on <a href="/posts/{{this.post._id}}">{{this.post.title}}</a> </p>
                 </div>
             </li>
         {{/each}}

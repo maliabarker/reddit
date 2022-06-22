@@ -59,7 +59,7 @@ module.exports = (app) => {
     app.get('/posts/:id', (req, res) => {
         // LOOK UP THE POST
         const currentUser = req.user;
-        Post.findById(req.params.id).lean().populate({ path:'comments', populate: { path: 'author' } }).populate('author')
+        Post.findById(req.params.id).populate('comments').lean()
         .then((post) => {
             let createdAt = post.createdAt;
             createdAt = moment(createdAt).format('MMMM Do YYYY, h:mm a');
@@ -71,15 +71,15 @@ module.exports = (app) => {
         });
     });
 
-    // SUBREDDIT
-    app.get('/n/:subreddit', (req, res) => {
-        const currentUser = req.user;
-        Post.find({ subreddit: req.params.subreddit }).lean().populate('author')
-        .then((posts) => res.render('posts-index', { posts, currentUser }))
-        .catch((err) => {
-            console.log(err);
-        });
-    });
+	// SUBREDDIT
+	app.get('/n/:subreddit', (req, res) => {
+		const { user } = req;
+		Post.find({ subreddit: req.params.subreddit }).lean()
+		.then((posts) => res.render('posts-index', { posts, user }))
+		.catch((err) => {
+			console.log(err);
+		});
+	});
 
     // DELETE
     
