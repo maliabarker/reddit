@@ -1,0 +1,13 @@
+<!-- views/partials/comment.handlebars -->
+
+<div class="col-xs-12 comment-indent">
+    <p>{{comment.content}}</p>
+    <div class="d-flex mb-3">
+        <a class="me-auto" href="/posts/{{postId}}/comments/{{comment._id}}/replies/new">Reply</a>
+        <small class="ms-auto">Posted by <a href="/users/{{comment.author.username}}">{{comment.author.username}}</a></small>
+    </div>
+    
+    {{#each comment.comments}}
+        {{> comment comment=this postId=../postId}}
+    {{/each}}
+</div>
