@@ -59,6 +59,7 @@ module.exports = (app) => {
 
     // LOGOUT
     app.get('/logout', (req, res) => {
+		console.log('LOGGED OUT')
         res.clearCookie('nToken');
         return res.redirect('/');
     });

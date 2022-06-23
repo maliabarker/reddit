@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const path = require('path');
 
 const app = express();
 
@@ -16,24 +15,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// styles
-app.use(express.static(path.join(__dirname, 'public')));
+// public folder (static and ajax)
+app.use(express.static('public'));
 
 // Set db
 require('./data/reddit-db');
 
+// requiring the check auth function/middleware
 const checkAuth = require('./middleware/checkAuth');
 app.use(checkAuth);
+
+// requiring controller files
 const posts = require('./controllers/posts')(app);
 const comments = require('./controllers/comments.js')(app);
 const auth = require('./controllers/auth.js')(app);
 const users = require('./controllers/users.js')(app);
 const replies = require('./controllers/replies.js')(app);
-
-
-// app.get('/', (req, res) => {
-//     res.render('home');
-// });
 
 app.listen(3000);
 
